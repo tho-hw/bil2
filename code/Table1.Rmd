@@ -1,0 +1,9 @@
+```{r}
+View(bil)
+
+mean(bil$age_at_doi)
+mean(bil$bp_sys_mean)
+mean(bil$bp_dia_mean)
+mean(bil$hr_mean)
+```
+
