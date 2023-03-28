@@ -25,8 +25,8 @@ bil = read_csv("bil.csv")
 
 Data Import PC
 ```{r}
-etwd()
-setwd(xxx)
+getwd()
+setwd("H:/PhD RH 2019 - 2022/Prj 4 BILACO/rbil/bil2/data")
 bil = read_csv("bil.csv")
 ```
 
