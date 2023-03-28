@@ -4,6 +4,10 @@ author: "Thomas Holm-Weber"
 date: "2023-03-28"
 output: html_document
 ---
+No echo
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
 Packages
 ```{r}
 install.packages("tidyverse")
@@ -17,6 +21,8 @@ getwd()
 setwd("/Users/thomasholm-weber/Desktop/bil/bil2/data")
 bil = read_csv("bil.csv")
 ```
+
+
 Data Import PC
 ```{r}
 etwd()
