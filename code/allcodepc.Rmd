@@ -1,0 +1,85 @@
+---
+title: "Bil code"
+author: "Thomas Holm-Weber"
+date: "2023-03-28"
+output: html_document
+---
+No echo
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+Packages
+```{r}
+install.packages("tidyverse", repos = "http://cran.us.r-project.org")
+library(tidyverse)
+```
+
+Data Import PC
+```{r}
+getwd()
+setwd("H:/PhD RH 2019 - 2022/Prj 4 BILACO/rbil/bil2/data")
+bil = read_csv("bil.csv")
+```
+
+
+
+Table 1 data
+```{r}
+mean(bil$age_at_doi, na.rm = T)
+mean(bil$bp_sys_mean, na.rm = T)
+mean(bil$bp_dia_mean, na.rm = T)
+mean(bil$hr_mean, na.rm = T)
+
+glimpse(bil$bp_mean_dia)
+```
+
+Subsets disease
+```{r}
+bil$disease = recode(bil$disease, "1" = "ba", "2" = "tof")
+
+ba = bil %>% filter(disease=="ba")
+tof = bil %>% filter(disease=="tof")
+```
+
+ToF table1
+```{r}
+mean(tof$age_at_doi, na.rm = T)
+mean(tof$bp_sys_mean, na.rm = T)
+mean(tof$bp_dia_mean, na.rm = T)
+mean(tof$hr_mean, na.rm = T)
+```
+
+
+BA table1
+```{r}
+mean(ba$age_at_doi, na.rm = T)
+mean(ba$bp_sys_mean, na.rm = T)
+mean(ba$bp_dia_mean, na.rm = T)
+mean(ba$hr_mean, na.rm = T)
+```
+
+
+
+NIRF ToF
+```{r}
+mean(tof$lrate, na.rm = T)
+mean(tof$lrate_2, na.rm = T)
+mean(tof$lpressure, na.rm = T)
+```
+
+NIRF BA
+```{r}
+mean(ba$lrate, na.rm = T)
+mean(ba$lrate_2, na.rm = T)
+mean(ba$lpressure, na.rm = T)
+```
+
+MR ToF
+```{r}
+mean(tof$mritype_t, na.rm = T)
+```
+
+MR BA
+```{r}
+mean(ba$mritype_t, na.rm = T)
+```

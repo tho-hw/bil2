@@ -1,14 +1,11 @@
+Table 1 data
 ```{r}
-View(bil)
-
 mean(bil$age_at_doi, na.rm = T)
 mean(bil$bp_sys_mean, na.rm = T)
 mean(bil$bp_dia_mean, na.rm = T)
 mean(bil$hr_mean, na.rm = T)
 
-
-
-glimpse(bil)
+glimpse(bil$bp_mean_dia)
 ```
 
 Subsets disease
@@ -17,5 +14,22 @@ bil$disease = recode(bil$disease, "1" = "ba", "2" = "tof")
 
 ba = bil %>% filter(disease=="ba")
 tof = bil %>% filter(disease=="tof")
+```
+
+ToF table1
+```{r}
+mean(tof$age_at_doi, na.rm = T)
+mean(tof$bp_sys_mean, na.rm = T)
+mean(tof$bp_dia_mean, na.rm = T)
+mean(tof$hr_mean, na.rm = T)
+```
+
+
+BA table1
+```{r}
+mean(ba$age_at_doi, na.rm = T)
+mean(ba$bp_sys_mean, na.rm = T)
+mean(ba$bp_dia_mean, na.rm = T)
+mean(ba$hr_mean, na.rm = T)
 ```
 
