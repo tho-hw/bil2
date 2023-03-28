@@ -5,18 +5,19 @@ date: "2023-03-28"
 output: html_document
 ---
 No echo
-```{r setup, include=FALSE}
+```{r setup, echo=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 Packages
-```{r}
+```{r, echo=FALSE}
 install.packages("tidyverse", repos = "http://cran.us.r-project.org")
 library(tidyverse)
+library(ggplot2)
 ```
 
 
 Data Import Mac
-```{r}
+```{r, echo=FALSE}
 getwd()
 setwd("/Users/thomasholm-weber/Desktop/bil/bil2/data")
 bil = read_csv("bil.csv")
@@ -24,7 +25,7 @@ bil = read_csv("bil.csv")
 
 
 Table 1 data
-```{r}
+```{r, echo=FALSE}
 mean(bil$age_at_doi, na.rm = T)
 mean(bil$bp_sys_mean, na.rm = T)
 mean(bil$bp_dia_mean, na.rm = T)
@@ -34,7 +35,7 @@ glimpse(bil$bp_mean_dia)
 ```
 
 Subsets disease
-```{r}
+```{r, echo=FALSE}
 bil$disease = recode(bil$disease, "1" = "ba", "2" = "tof")
 
 ba = bil %>% filter(disease=="ba")
@@ -42,7 +43,7 @@ tof = bil %>% filter(disease=="tof")
 ```
 
 ToF table1
-```{r}
+```{r, echo=FALSE}
 mean(tof$age_at_doi, na.rm = T)
 mean(tof$bp_sys_mean, na.rm = T)
 mean(tof$bp_dia_mean, na.rm = T)
@@ -51,7 +52,7 @@ mean(tof$hr_mean, na.rm = T)
 
 
 BA table1
-```{r}
+```{r, echo=FALSE}
 mean(ba$age_at_doi, na.rm = T)
 mean(ba$bp_sys_mean, na.rm = T)
 mean(ba$bp_dia_mean, na.rm = T)
@@ -61,25 +62,50 @@ mean(ba$hr_mean, na.rm = T)
 
 
 NIRF ToF
-```{r}
+```{r, echo=FALSE}
 mean(tof$lrate, na.rm = T)
 mean(tof$lrate_2, na.rm = T)
 mean(tof$lpressure, na.rm = T)
 ```
 
 NIRF BA
-```{r}
+```{r, echo=FALSE}
 mean(ba$lrate, na.rm = T)
 mean(ba$lrate_2, na.rm = T)
 mean(ba$lpressure, na.rm = T)
 ```
 
 MR ToF
-```{r}
+```{r, echo=FALSE}
 mean(tof$mritype_t, na.rm = T)
 ```
 
 MR BA
-```{r}
+```{r, echo=FALSE}
 mean(ba$mritype_t, na.rm = T)
+```
+Boxplot LP
+```{r, echo=FALSE}
+ggplot(bil, aes(x = disease, y = lpressure)) +
+  geom_boxplot() +
+  labs(x = "disease", y = "lpressure")
+
+```
+
+
+Boxplot LR
+```{r, echo=FALSE}
+ggplot(bil, aes(x = disease, y = lrate)) +
+  geom_boxplot() +
+  labs(x = "disease", y = "lrate")
+
+```
+
+
+Boxplot LR2
+```{r, echo=FALSE}
+ggplot(bil, aes(x = disease, y = lrate_2)) +
+  geom_boxplot() +
+  labs(x = "disease", y = "lrate2")
+
 ```
