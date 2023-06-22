@@ -12,6 +12,7 @@ Packages
 ```{r}
 install.packages("tidyverse", repos = "http://cran.us.r-project.org")
 library(tidyverse)
+
 ```
 
 Data Import PC
@@ -44,18 +45,26 @@ tof = bil %>% filter(disease=="tof")
 ToF table1
 ```{r}
 mean(tof$age_at_doi, na.rm = T)
+sd(tof$age_at_doi, na.rm = T)
 mean(tof$bp_sys_mean, na.rm = T)
-mean(tof$bp_dia_mean, na.rm = T)
+sd(tof$bp_sys_mean, na.rm = T)
+mean(tof$bp_mean_dia, na.rm = T)
+sd(tof$bp_mean_dia, na.rm = T)
 mean(tof$hr_mean, na.rm = T)
+sd(tof$hr_mean, na.rm = T)
 ```
 
 
 BA table1
 ```{r}
 mean(ba$age_at_doi, na.rm = T)
+sd(ba$age_at_doi, na.rm = T)
 mean(ba$bp_sys_mean, na.rm = T)
-mean(ba$bp_dia_mean, na.rm = T)
+sd(ba$bp_mean_dia, na.rm = T)
+mean(ba$bp_sys_mean, na.rm = T)
+sd(ba$bp_sys_mean, na.rm = T)
 mean(ba$hr_mean, na.rm = T)
+sd(ba$hr_mean, na.rm = T)
 ```
 
 
@@ -63,15 +72,21 @@ mean(ba$hr_mean, na.rm = T)
 NIRF ToF
 ```{r}
 mean(tof$lrate, na.rm = T)
+sd(tof$lrate, na.rm = T)
 mean(tof$lrate_2, na.rm = T)
+sd(tof$lrate_2, na.rm = T)
 mean(tof$lpressure, na.rm = T)
+sd(tof$lpressure, na.rm = T)
 ```
 
 NIRF BA
 ```{r}
 mean(ba$lrate, na.rm = T)
+sd(ba$lrate, na.rm = T)
 mean(ba$lrate_2, na.rm = T)
+sd(ba$lrate_2, na.rm = T)
 mean(ba$lpressure, na.rm = T)
+sd(ba$lpressure, na.rm = T)
 ```
 
 MR ToF
