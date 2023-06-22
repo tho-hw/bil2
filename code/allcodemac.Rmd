@@ -84,6 +84,7 @@ MR BA
 ```{r, echo=FALSE}
 mean(ba$mritype_t, na.rm = T)
 ```
+
 Boxplot LP
 ```{r, echo=FALSE}
 ggplot(bil, aes(x = disease, y = lpressure)) +
