@@ -85,11 +85,12 @@ MR BA
 mean(ba$mritype_t, na.rm = T)
 ```
 
+
 Boxplot LP
 ```{r, echo=FALSE}
 ggplot(bil, aes(x = disease, y = lpressure)) +
   geom_boxplot() +
-  labs(x = "disease", y = "lpressure")
+  labs(x = "disease", y = "lpressure") + theme_bw()
 
 ```
 
@@ -98,8 +99,7 @@ Boxplot LR
 ```{r, echo=FALSE}
 ggplot(bil, aes(x = disease, y = lrate)) +
   geom_boxplot() +
-  labs(x = "disease", y = "lrate")
-
+  labs(x = "disease", y = "lrate") + theme_bw()
 ```
 
 
@@ -107,6 +107,6 @@ Boxplot LR2
 ```{r, echo=FALSE}
 ggplot(bil, aes(x = disease, y = lrate_2)) +
   geom_boxplot() +
-  labs(x = "disease", y = "lrate2")
+  labs(x = "disease", y = "lrate2") + theme_bw()
 
 ```
