@@ -12,6 +12,7 @@ Packages
 ```{r}
 install.packages("tidyverse")
 library(tidyverse)
+library(readr)
 ```
 
 
