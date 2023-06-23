@@ -5,14 +5,22 @@ date: "2023-03-28"
 output: html_document
 ---
 No echo
-```{r setup, include=FALSE}
+```{r setup, echo=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 Packages
-```{r}
+```{r, echo=FALSE}
 install.packages("tidyverse", repos = "http://cran.us.r-project.org")
 library(tidyverse)
+library(ggplot2)
+```
 
+
+Data Import Mac
+```{r, echo=FALSE}
+getwd()
+setwd("/Users/thomasholm-weber/Desktop/bil/bil2/data")
+bil = read_csv("bil.csv")
 ```
 
 Data Import PC
@@ -22,20 +30,22 @@ setwd("H:/PhD RH 2019 - 2022/Prj 4 BILACO/rbil/bil2/data")
 bil = read_csv("bil.csv")
 ```
 
-
-
 Table 1 data
-```{r}
+```{r, echo=FALSE}
 mean(bil$age_at_doi, na.rm = T)
+sd(bil$age_at_doi, na.rm = T)
 mean(bil$bp_sys_mean, na.rm = T)
-mean(bil$bp_dia_mean, na.rm = T)
+sd(bil$bp_sys_mean, na.rm = T)
+mean(bil$bp_mean_dia, na.rm = T)
+sd(bil$bp_mean_dia, na.rm = T)
 mean(bil$hr_mean, na.rm = T)
+sd(bil$hr_mean, na.rm = T)
 
 glimpse(bil$bp_mean_dia)
 ```
 
 Subsets disease
-```{r}
+```{r, echo=FALSE}
 bil$disease = recode(bil$disease, "1" = "ba", "2" = "tof")
 
 ba = bil %>% filter(disease=="ba")
@@ -89,15 +99,17 @@ mean(ba$lpressure, na.rm = T)
 sd(ba$lpressure, na.rm = T)
 ```
 
+
 MR ToF
-```{r}
+```{r, echo=FALSE}
 mean(tof$mritype_t, na.rm = T)
 ```
 
 MR BA
-```{r}
+```{r, echo=FALSE}
 mean(ba$mritype_t, na.rm = T)
 ```
+
 
 Boxplot LP
 ```{r, echo=FALSE}
