@@ -140,6 +140,17 @@ ggplot(bil, aes(x = disease, y = lrate_2)) +
 tofresults <- tof %>% 
   select(fp_nr, lrate,lrate_2,lpressure, mritype_agreed, ef, color_for_estimation_of_pr, )
 
+tofresults
+
 write.csv(tofresults, "tofresults.csv")
+```
+
+```{r}
+baresults <- ba %>% 
+  select(fp_nr, lrate,lrate_2,lpressure, mritype_agreed, ef, color_for_estimation_of_pr, )
+
+baresults
+
+write.csv(tofresults, "baresults.csv")
 ```
 
