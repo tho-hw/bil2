@@ -102,12 +102,12 @@ sd(ba$lpressure, na.rm = T)
 
 MR ToF
 ```{r, echo=FALSE}
-mean(tof$mritype_t, na.rm = T)
+mean(tof$mritype_agreed, na.rm = T)
 ```
 
 MR BA
 ```{r, echo=FALSE}
-mean(ba$mritype_t, na.rm = T)
+mean(ba$mritype_agreed, na.rm = T)
 ```
 
 
