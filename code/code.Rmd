@@ -144,7 +144,7 @@ ggplot(bil, aes(x = disease, y = lrate_2)) +
 
 ```{r}
 tofresults <- tof %>% 
-  select(fp_nr, lrate,lrate_2,lpressure, mritype_agreed, ef, color_for_estimation_of_pr, mm_for_estimation_of_cvp, mm_lateral_tv_annulus_for)
+  select(fp_nr, lrate,lrate_2,lpressure, mritype_agreed, color_for_estimation_of_pr, mm_for_estimation_of_cvp, mm_lateral_tv_annulus_for, years_with_pr, ef)
 
 tofresults
 
