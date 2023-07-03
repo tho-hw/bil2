@@ -8,7 +8,7 @@ No echo
 ```{r setup, echo=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
-Packages
+#Packages
 ```{r, echo=FALSE}
 install.packages("tidyverse", repos = "http://cran.us.r-project.org")
 library(tidyverse)
@@ -16,21 +16,21 @@ library(ggplot2)
 ```
 
 
-Data Import Mac
+#Data Import Mac
 ```{r, echo=FALSE}
 getwd()
 setwd("/Users/thomasholm-weber/Desktop/bil/bil2/data")
 bil = read_csv("bil.csv")
 ```
 
-Data Import PC
+#Data Import PC
 ```{r}
 getwd()
 setwd("H:/PhD RH 2019 - 2022/Prj 4 BILACO/rbil/bil2/data")
 bil = read_csv("bil.csv")
 ```
 
-Table 1 data
+#Table 1 data
 ```{r, echo=FALSE}
 mean(bil$age_at_doi, na.rm = T)
 sd(bil$age_at_doi, na.rm = T)
@@ -44,7 +44,7 @@ sd(bil$hr_mean, na.rm = T)
 glimpse(bil$bp_mean_dia)
 ```
 
-Subsets disease & rename variables
+#Subsets disease & rename variables
 ```{r, echo=FALSE}
 bil$disease = recode(bil$disease, "1" = "ba", "2" = "tof", "3" = "cc")
 bil$mm_for_estimation_of_cvp = recode(bil$mm_for_estimation_of_cvp, "1" = "Not dilated")
@@ -58,7 +58,7 @@ cc = bil %>% filter(disease=="cc")
 ```
 
 
-ToF table1
+#ToF table1
 ```{r}
 mean(tof$age_at_doi, na.rm = T)
 sd(tof$age_at_doi, na.rm = T)
@@ -71,7 +71,7 @@ sd(tof$hr_mean, na.rm = T)
 ```
 
 
-BA table1
+#BA table1
 ```{r}
 mean(ba$age_at_doi, na.rm = T)
 sd(ba$age_at_doi, na.rm = T)
@@ -85,7 +85,7 @@ sd(ba$hr_mean, na.rm = T)
 
 
 
-NIRF ToF
+#NIRF ToF
 ```{r}
 mean(tof$lrate, na.rm = T)
 sd(tof$lrate, na.rm = T)
@@ -95,7 +95,7 @@ mean(tof$lpressure, na.rm = T)
 sd(tof$lpressure, na.rm = T)
 ```
 
-NIRF BA
+#NIRF BA
 ```{r}
 mean(ba$lrate, na.rm = T)
 sd(ba$lrate, na.rm = T)
@@ -106,18 +106,18 @@ sd(ba$lpressure, na.rm = T)
 ```
 
 
-MR ToF
+#MR ToF
 ```{r, echo=FALSE}
 mean(tof$mritype_agreed, na.rm = T)
 ```
 
-MR BA
+#MR BA
 ```{r, echo=FALSE}
 mean(ba$mritype_agreed, na.rm = T)
 ```
 
 
-Boxplot LP
+#Boxplot LP
 ```{r, echo=FALSE}
 ggplot(bil, aes(x = disease, y = lpressure)) +
   geom_boxplot() +
@@ -126,7 +126,7 @@ ggplot(bil, aes(x = disease, y = lpressure)) +
 ```
 
 
-Boxplot LR
+#Boxplot LR
 ```{r, echo=FALSE}
 ggplot(bil, aes(x = disease, y = lrate)) +
   geom_boxplot() +
@@ -134,7 +134,7 @@ ggplot(bil, aes(x = disease, y = lrate)) +
 ```
 
 
-Boxplot LR2
+#Boxplot LR2
 ```{r, echo=FALSE}
 ggplot(bil, aes(x = disease, y = lrate_2)) +
   geom_boxplot() +
@@ -142,18 +142,20 @@ ggplot(bil, aes(x = disease, y = lrate_2)) +
 
 ```
 
+
+#ToFresultstable
 ```{r}
 tofresults <- tof %>% 
-  select(fp_nr, lrate,lrate_2,lpressure, mritype_agreed, color_for_estimation_of_pr, mm_for_estimation_of_cvp, mm_lateral_tv_annulus_for, years_with_pr, ef)
+  select(fp_nr, mritype_agreed, lrate,lrate_2,lpressure, color_for_estimation_of_pr, mm_for_estimation_of_cvp, mm_lateral_tv_annulus_for, years_with_pr, ef)
 
 tofresults
 
 write.csv(tofresults, "tofresults.csv")
 ```
-
+#baresultstable
 ```{r}
 baresults <- ba %>% 
-  select(fp_nr, lrate,lrate_2,lpressure, mritype_agreed, ef, color_for_estimation_of_pr, )
+  select(fp_nr, mritype_agreed, lrate,lrate_2,lpressure, color_for_estimation_of_pr, mm_for_estimation_of_cvp, mm_lateral_tv_annulus_for, years_with_pr, ef)
 
 baresults
 
