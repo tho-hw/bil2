@@ -10,6 +10,7 @@ output: html_document
 install.packages("tidyverse", repos = "http://cran.us.r-project.org")
 library(tidyverse)
 library(ggplot2)
+library(dplyr)
 ```
 No echo
 ```{r setup, echo=FALSE}
@@ -52,12 +53,11 @@ bil$mm_for_estimation_of_cvp = recode(bil$mm_for_estimation_of_cvp, "1" = "Not d
 bil$color_for_evaluation_of_ar = recode(bil$color_for_evaluation_of_ar, "1" = "No Aortic Regurgitation")
 bil$pr = recode(bil$color_for_estimation_of_pr, "1" = "No Pulmonal Regurgitation", "2" = "Mild Pulmonal Regurgitation", "3" = "Moderat Pulmonal Regurgitation", "4" = "Severe Pulmonal Regurgitation")
 bil$mv_color_interrogation_for = recode(bil$mv_color_interrogation_for, "1" = "No Mitral Valve Regurgitation", "2" = "Mild Mitral Valve Regurgitation")
+bil$sex = recode(bil$sex, "1" = "M", "2" = "F")
+
+
+##lrate_diff
 bil$lrate_diff = bil$lrate - bil$lrate_2
-
-glimpse(bil$lrate_diff)
-glimpse(bil$lrate)
-glimpse(bil$lrate_2)
-
 
 ba = bil %>% filter(disease=="ba")
 tof = bil %>% filter(disease=="tof")
@@ -75,6 +75,14 @@ mean(tof$bp_mean_dia, na.rm = T)
 sd(tof$bp_mean_dia, na.rm = T)
 mean(tof$hr_mean, na.rm = T)
 sd(tof$hr_mean, na.rm = T)
+
+toft1 <- tof %>% 
+  select(fp_nr, age_at_doi, sex, bmi, bp_sys_mean, bp_mean_dia, hr_mean, medication_list)
+
+toft1
+
+
+write.csv(toft1, "toft1.csv")
 ```
 
 
@@ -162,34 +170,42 @@ write.csv(tofresults, "tofresults.csv")
 
 #correlationstof
 ```{r}
+## Lymph Rate to MRI
 correlationlr1mri <- tof %>%
   summarize(correlationlr1mri = cor(mritype_agreed, lrate, use = "complete.obs"))
 
 print(correlationlr1mri)
 
+## Lymph Rate 2 to MRI
 correlationlr2mri <- tof %>%
   summarize(correlationlr1mri = cor(mritype_agreed, lrate_2, use = "complete.obs"))
 
 print(correlationlr2mri)
 
+## Lymph Rate change to MRI
 correlationlrdiffmri <- tof %>%
   summarize(correlationlr1mri = cor(mritype_agreed, lrate_diff, use = "complete.obs"))
 
 print(correlationlrdiffmri)
 
-
+## Lymph Pressure to MRI
 correlationlpmri <- tof %>%
   summarize(correlationlr1mri = cor(mritype_agreed, lpressure, use = "complete.obs"))
 
 print(correlationlpmri)
 
-
+## PR to MRI
 correlationprmri <- tof %>%
   summarize(correlationlr1mri = cor(mritype_agreed, color_for_estimation_of_pr, use = "complete.obs"))
 
 print(correlationprmri)
 
-view(tof$color_for_estimation_of_pr)
+## Tapse to MRI
+correlationtapsemri <- tof %>%
+  summarize(correlationlr1mri = cor(mritype_agreed, mm_lateral_tv_annulus_for, use = "complete.obs"))
+
+print(correlationtapsemri)
+
 
 ```
 
