@@ -50,7 +50,7 @@ glimpse(bil$bp_mean_dia)
 bil$disease = recode(bil$disease, "1" = "ba", "2" = "tof", "3" = "cc")
 bil$mm_for_estimation_of_cvp = recode(bil$mm_for_estimation_of_cvp, "1" = "Not dilated")
 bil$color_for_evaluation_of_ar = recode(bil$color_for_evaluation_of_ar, "1" = "No Aortic Regurgitation")
-bil$color_for_estimation_of_pr = recode(bil$color_for_estimation_of_pr, "1" = "No Pulmonal Regurgitation", "2" = "Mild Pulmonal Regurgitation", "3" = "Moderat Pulmonal Regurgitation", "4" = "Severe Pulmonal Regurgitation")
+bil$pr = recode(bil$color_for_estimation_of_pr, "1" = "No Pulmonal Regurgitation", "2" = "Mild Pulmonal Regurgitation", "3" = "Moderat Pulmonal Regurgitation", "4" = "Severe Pulmonal Regurgitation")
 bil$mv_color_interrogation_for = recode(bil$mv_color_interrogation_for, "1" = "No Mitral Valve Regurgitation", "2" = "Mild Mitral Valve Regurgitation")
 bil$lrate_diff = bil$lrate - bil$lrate_2
 
@@ -153,7 +153,7 @@ ggplot(bil, aes(x = disease, y = lrate_2)) +
 #ToFresultstable
 ```{r}
 tofresults <- tof %>% 
-  select(fp_nr, mritype_agreed, lrate,lrate_2,lpressure, color_for_estimation_of_pr, mm_for_estimation_of_cvp, mm_lateral_tv_annulus_for, years_with_pr, ef)
+  select(fp_nr, mritype_agreed, lrate,lrate_2,lpressure, pr, mm_for_estimation_of_cvp, mm_lateral_tv_annulus_for, years_with_pr, ef)
 
 tofresults
 
@@ -183,15 +183,13 @@ correlationlpmri <- tof %>%
 
 print(correlationlpmri)
 
-tof <- tof %>%
-  mutate(
-    PR_numeric = as.numeric(as.character(color_for_estimation_of_pr))
-  )
 
 correlationprmri <- tof %>%
-  summarize(correlationlr1mri = cor(mritype_agreed, PR_numeric, use = "complete.obs"))
+  summarize(correlationlr1mri = cor(mritype_agreed, color_for_estimation_of_pr, use = "complete.obs"))
 
 print(correlationprmri)
+
+view(tof$color_for_estimation_of_pr)
 
 ```
 
