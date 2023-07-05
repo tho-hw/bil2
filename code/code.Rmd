@@ -5,16 +5,15 @@ date: "2023-03-28"
 output: html_document
 ---
 
-#Packages
+#Packagesinstall
 ```{r, echo=FALSE}
 install.packages("tidyverse", repos = "http://cran.us.r-project.org")
+```
+#PackagesLibrary
+```{r, echo=FALSE}
 library(tidyverse)
 library(ggplot2)
 library(dplyr)
-```
-No echo
-```{r setup, echo=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
 ```
 
 
@@ -30,18 +29,6 @@ bil = read_csv("bil.csv")
 getwd()
 setwd("H:/PhD RH 2019 - 2022/Prj 4 BILACO/rbil/bil2/data")
 bil = read_csv("bil.csv")
-```
-
-#Table 1 data
-```{r, echo=FALSE}
-mean(bil$age_at_doi, na.rm = T)
-sd(bil$age_at_doi, na.rm = T)
-mean(bil$bp_sys_mean, na.rm = T)
-sd(bil$bp_sys_mean, na.rm = T)
-mean(bil$bp_mean_dia, na.rm = T)
-sd(bil$bp_mean_dia, na.rm = T)
-mean(bil$hr_mean, na.rm = T)
-sd(bil$hr_mean, na.rm = T)
 ```
 
 #Subsets disease & rename variables
@@ -65,35 +52,12 @@ cc = bil %>% filter(disease=="cc")
 
 #ToF table1
 ```{r}
-mean(tof$age_at_doi, na.rm = T)
-sd(tof$age_at_doi, na.rm = T)
-mean(tof$bp_sys_mean, na.rm = T)
-sd(tof$bp_sys_mean, na.rm = T)
-mean(tof$bp_mean_dia, na.rm = T)
-sd(tof$bp_mean_dia, na.rm = T)
-mean(tof$hr_mean, na.rm = T)
-sd(tof$hr_mean, na.rm = T)
-
 toft1 <- tof %>% 
   select(fp_nr, age_at_doi, sex, bmi, bt_sys, bt_dia, puls, medication_list)
 
 toft1
 
-
 write.csv(toft1, "toft1.csv")
-```
-
-
-#BA table1
-```{r}
-mean(ba$age_at_doi, na.rm = T)
-sd(ba$age_at_doi, na.rm = T)
-mean(ba$bp_sys_mean, na.rm = T)
-sd(ba$bp_mean_dia, na.rm = T)
-mean(ba$bp_sys_mean, na.rm = T)
-sd(ba$bp_sys_mean, na.rm = T)
-mean(ba$hr_mean, na.rm = T)
-sd(ba$hr_mean, na.rm = T)
 ```
 
 
@@ -108,25 +72,10 @@ mean(tof$lpressure, na.rm = T)
 sd(tof$lpressure, na.rm = T)
 ```
 
-#NIRF BA
-```{r}
-mean(ba$lrate, na.rm = T)
-sd(ba$lrate, na.rm = T)
-mean(ba$lrate_2, na.rm = T)
-sd(ba$lrate_2, na.rm = T)
-mean(ba$lpressure, na.rm = T)
-sd(ba$lpressure, na.rm = T)
-```
-
 
 #MR ToF
 ```{r, echo=FALSE}
 mean(tof$mritype_agreed, na.rm = T)
-```
-
-#MR BA
-```{r, echo=FALSE}
-mean(ba$mritype_agreed, na.rm = T)
 ```
 
 
@@ -204,17 +153,4 @@ correlationtapsemri <- tof %>%
 
 print(correlationtapsemri)
 
-
 ```
-
-
-#baresultstable
-```{r}
-baresults <- ba %>% 
-  select(fp_nr, mritype_agreed, lrate,lrate_2,lpressure, color_for_estimation_of_pr, mm_for_estimation_of_cvp, mm_lateral_tv_annulus_for, years_with_pr, ef)
-
-baresults
-
-write.csv(tofresults, "baresults.csv")
-```
-
