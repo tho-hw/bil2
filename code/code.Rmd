@@ -42,8 +42,6 @@ mean(bil$bp_mean_dia, na.rm = T)
 sd(bil$bp_mean_dia, na.rm = T)
 mean(bil$hr_mean, na.rm = T)
 sd(bil$hr_mean, na.rm = T)
-
-glimpse(bil$bp_mean_dia)
 ```
 
 #Subsets disease & rename variables
@@ -77,7 +75,7 @@ mean(tof$hr_mean, na.rm = T)
 sd(tof$hr_mean, na.rm = T)
 
 toft1 <- tof %>% 
-  select(fp_nr, age_at_doi, sex, bmi, bp_sys_mean, bp_mean_dia, hr_mean, medication_list)
+  select(fp_nr, age_at_doi, sex, bmi, bt_sys, bt_dia, puls, medication_list)
 
 toft1
 
