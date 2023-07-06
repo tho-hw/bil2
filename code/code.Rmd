@@ -153,4 +153,12 @@ correlationtapsemri <- tof %>%
 
 print(correlationtapsemri)
 
+## Years PR to MRI
+correlationtapsemri <- tof %>%
+  summarize(correlationlr1mri = cor(mritype_agreed, years_with_pr, use = "complete.obs"))
+
+print(correlationtapsemri)
+
+
+
 ```
