@@ -105,7 +105,7 @@ ggplot(bil, aes(x = disease, y = lrate_2)) +
 ```
 
 
-#ToFresultstable
+#ToFresultstableshort
 ```{r}
 tofresults <- tof %>% 
   select(fp_nr, mritype_agreed, lrate,lrate_2,lpressure, pr, mm_for_estimation_of_cvp, mm_lateral_tv_annulus_for, years_with_pr, ef)
@@ -114,6 +114,19 @@ tofresults
 
 write.csv(tofresults, "tofresults.csv")
 ```
+
+#ToFresultstablelang
+```{r}
+tofresults <- tof %>% 
+  select(fp_nr, mritype_agreed, lrate,lrate_2,lpressure, pr, mm_for_estimation_of_cvp, mm_lateral_tv_annulus_for, years_with_pr, ef, )
+
+tofresults
+
+write.csv(tofresults, "tofresults.csv")
+```
+
+
+
 
 #correlationstof
 ```{r}
