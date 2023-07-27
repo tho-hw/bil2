@@ -133,43 +133,43 @@ write.csv(tofresultslong, "tofresultslong.csv")
 ```{r}
 ## Lymph Rate to MRI
 correlationlr1mri <- tof %>%
-  summarize(correlationlr1mri = cor(mritype_agreed, lrate, use = "complete.obs"))
+  summarize(correlationlr1mri = cor(mritype_agreed, lrate, use = "complete.obs", method = "pearson"))
 
 print(correlationlr1mri)
 
 ## Lymph Rate 2 to MRI
 correlationlr2mri <- tof %>%
-  summarize(correlationlr1mri = cor(mritype_agreed, lrate_2, use = "complete.obs"))
+  summarize(correlationlr1mri = cor(mritype_agreed, lrate_2, use = "complete.obs", method = "pearson"))
 
 print(correlationlr2mri)
 
 ## Lymph Rate change to MRI
 correlationlrdiffmri <- tof %>%
-  summarize(correlationlr1mri = cor(mritype_agreed, lrate_diff, use = "complete.obs"))
+  summarize(correlationlr1mri = cor(mritype_agreed, lrate_diff, use = "complete.obs", method = "pearson"))
 
 print(correlationlrdiffmri)
 
 ## Lymph Pressure to MRI
 correlationlpmri <- tof %>%
-  summarize(correlationlr1mri = cor(mritype_agreed, lpressure, use = "complete.obs"))
+  summarize(correlationlr1mri = cor(mritype_agreed, lpressure, use = "complete.obs", method = "pearson"))
 
 print(correlationlpmri)
 
 ## PR to MRI
 correlationprmri <- tof %>%
-  summarize(correlationlr1mri = cor(mritype_agreed, color_for_estimation_of_pr, use = "complete.obs"))
+  summarize(correlationlr1mri = cor(mritype_agreed, color_for_estimation_of_pr, use = "complete.obs", method = "pearson"))
 
 print(correlationprmri)
 
 ## Tapse to MRI
 correlationtapsemri <- tof %>%
-  summarize(correlationlr1mri = cor(mritype_agreed, mm_lateral_tv_annulus_for, use = "complete.obs"))
+  summarize(correlationlr1mri = cor(mritype_agreed, mm_lateral_tv_annulus_for, use = "complete.obs", method = "pearson"))
 
 print(correlationtapsemri)
 
 ## Years PR to MRI
 correlationtapsemri <- tof %>%
-  summarize(correlationlr1mri = cor(mritype_agreed, years_with_pr, use = "complete.obs"))
+  summarize(correlationlr1mri = cor(mritype_agreed, years_with_pr, use = "complete.obs"), method = "pearson")
 
 print(correlationtapsemri)
 
