@@ -45,7 +45,7 @@ bil$sex = recode(bil$sex, "1" = "M", "2" = "F")
 bil$lrate_diff = bil$lrate - bil$lrate_2
 
 ba = bil %>% filter(disease=="ba")
-tof = bil %>% filter(disease=="tof")
+tof = bil %>% filter(disease=="tof")  %>% slice(-8)
 cc = bil %>% filter(disease=="cc")
 ```
 
