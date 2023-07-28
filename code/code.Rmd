@@ -14,6 +14,8 @@ install.packages("tidyverse", repos = "http://cran.us.r-project.org")
 library(tidyverse)
 library(ggplot2)
 library(dplyr)
+library(kableExtra)
+library(knitr)
 ```
 
 
@@ -34,30 +36,117 @@ bil = read_csv("bil.csv")
 #Subsets disease & rename variables
 ```{r, echo=FALSE}
 bil$disease = recode(bil$disease, "1" = "ba", "2" = "tof", "3" = "cc")
-bil$mm_for_estimation_of_cvp = recode(bil$mm_for_estimation_of_cvp, "1" = "Not dilated")
+bil$mm_for_estimation_of_cvp = recode(bil$mm_for_estimation_of_cvp, "1" = "Normal")
 bil$color_for_evaluation_of_ar = recode(bil$color_for_evaluation_of_ar, "1" = "No Aortic Regurgitation")
-bil$pr = recode(bil$color_for_estimation_of_pr, "1" = "No Pulmonal Regurgitation", "2" = "Mild Pulmonal Regurgitation", "3" = "Moderat Pulmonal Regurgitation", "4" = "Severe Pulmonal Regurgitation")
+bil$pr = recode(bil$color_for_estimation_of_pr, "1" = "None", "2" = "Mild", "3" = "Moderat ", "4" = "Severe")
 bil$mv_color_interrogation_for = recode(bil$mv_color_interrogation_for, "1" = "No Mitral Valve Regurgitation", "2" = "Mild Mitral Valve Regurgitation")
+bil$congenital_anatomy = recode(bil$congenital_anatomy, "1" = "ToF", "2" = "ToF w/ PA", "3" = "ToF w/ near PA", "4" = "ToF w/ PA and MAPCA supply")
 bil$sex = recode(bil$sex, "1" = "M", "2" = "F")
+bil$shunt = recode(bil$shunt, "1" = "Yes", "2" = "No")
+bil$pink_or_blue = recode(bil$pink_or_blue, "1" = "Pink", "2" = "Blue")
+
 
 
 ##lrate_diff
 bil$lrate_diff = bil$lrate - bil$lrate_2
 
+##rname cols
+bil = bil %>% rename(
+    ID = fp_nr,
+    Type = mritype_agreed,
+    "Rate 1" = lrate,
+    "Rate 2" = lrate_2,
+    Pressure = lpressure,
+    PR = pr,
+    IVC = mm_for_estimation_of_cvp,
+    TAPSE = mm_lateral_tv_annulus_for,
+    "Years with PR" = years_with_pr,
+    EF = ef
+)
+
 ba = bil %>% filter(disease=="ba")
 tof = bil %>% filter(disease=="tof")  %>% slice(-8)
 cc = bil %>% filter(disease=="cc")
+
+tof$ID = recode(tof$ID,
+                   "9" = "A", 
+                   "13" = "B", 
+                   "14" = "C", 
+                   "15" = "D", 
+                   "16" = "E", 
+                   "17" = "F", 
+                   "18" = "G",
+                   "19" = "H", 
+                   "24" = "I")
 ```
 
 
-#ToF table1
+#ToF baseline data
 ```{r}
+##Table 1
+
 toft1 <- tof %>% 
-  select(fp_nr, age_at_doi, sex, bmi, bt_sys, bt_dia, puls, medication_list)
+  select(ID,
+         age_at_doi,
+         sex,
+         bmi,
+         c(61:63)
+         ) %>% arrange(ID)
 
-toft1
+toft1 = toft1 %>% 
+  rename(
+    "Age (years)" = age_at_doi,
+    BMI = bmi,
+    Sex = sex,
+    "Heart Rate" = puls,
+    "Systolic" = bt_sys,
+    "Diastolic" = bt_dia)
 
-write.csv(toft1, "toft1.csv")
+tof1latex = kbl(toft1, "latex",
+    booktabs = T, 
+    digits = 1, 
+    caption = "Baseline Demographic data",
+    linesep = "",
+    escape = FALSE) %>%
+  kable_classic_2 %>%
+  kable_styling(position = "center") %>%
+  add_header_above(c(" " = 4, "Blood pressure" = 2))
+
+cat(tof1latex)
+
+##Surgical hx
+
+tofhx = tof %>% 
+  select(ID,
+         congenital_anatomy,
+         pink_or_blue,
+         shunt,
+         age_at_repair_months,
+         repair_type,
+         other_diagnoses) %>% arrange(ID)
+
+tofhx = tofhx %>% 
+  rename(
+    Anatomy = congenital_anatomy,
+    "Pink/Blue" = pink_or_blue,
+    Shunt = shunt,
+    "Age at repair (months)" = age_at_repair_months,
+    "Type of Repair" = repair_type,
+    Comorbidities = other_diagnoses
+  )
+
+
+tofhxlatex = kbl(tofhx, "latex",
+    booktabs = T, 
+    digits = 1, 
+    caption = "Medical History",
+    linesep = "",
+    escape = FALSE) %>%
+  kable_classic_2 %>%
+  kable_styling(position = "center")
+
+cat(tofhxlatex)
+
 ```
 
 
@@ -108,11 +197,35 @@ ggplot(bil, aes(x = disease, y = lrate_2)) +
 #ToFresultstableshort
 ```{r}
 tofresults <- tof %>% 
-  select(fp_nr, mritype_agreed, lrate,lrate_2,lpressure, pr, mm_for_estimation_of_cvp, mm_lateral_tv_annulus_for, years_with_pr, ef)
+  select(
+    ID,
+    Type,
+    "Rate 1",
+    "Rate 2",
+    Pressure,
+    PR,
+    IVC,
+    TAPSE,
+    EF,
+    "Years with PR"
+  ) %>% arrange(ID)
 
 tofresults
 
 write.csv(tofresults, "tofresults.csv")
+
+toflatex = kbl(tofresults, "latex",
+    booktabs = T, 
+    digits = 1, 
+    caption = "Results",
+    linesep = "",
+    escape = FALSE) %>%
+  kable_classic_2 %>%
+  add_header_above(c(" " = 1, "MRI" = 1, "NIRF" = 3, "Echo" = 4)) %>%
+  kable_styling(position = "center")
+
+
+cat(toflatex)
 ```
 
 #ToFresultstablelang
