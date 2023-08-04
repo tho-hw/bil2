@@ -8,6 +8,8 @@ output: html_document
 #Packagesinstall
 ```{r, echo=FALSE}
 install.packages("tidyverse", repos = "http://cran.us.r-project.org")
+install.packages("kableExtra")
+install.packages("knitr")
 ```
 #PackagesLibrary
 ```{r, echo=FALSE}
@@ -44,6 +46,7 @@ bil$congenital_anatomy = recode(bil$congenital_anatomy, "1" = "ToF", "2" = "ToF 
 bil$sex = recode(bil$sex, "1" = "M", "2" = "F")
 bil$shunt = recode(bil$shunt, "1" = "Yes", "2" = "No")
 bil$pink_or_blue = recode(bil$pink_or_blue, "1" = "Pink", "2" = "Blue")
+
 
 
 
@@ -116,10 +119,11 @@ cat(tof1latex)
 
 ##Surgical hx
 
+
 tofhx = tof %>% 
   select(ID,
          congenital_anatomy,
-         pink_or_blue,
+         sat_newborn,
          shunt,
          age_at_repair_months,
          repair_type,
@@ -128,7 +132,7 @@ tofhx = tof %>%
 tofhx = tofhx %>% 
   rename(
     Anatomy = congenital_anatomy,
-    "Pink/Blue" = pink_or_blue,
+    "SAT" = sat_newborn,
     Shunt = shunt,
     "Age at repair (months)" = age_at_repair_months,
     "Type of Repair" = repair_type,
