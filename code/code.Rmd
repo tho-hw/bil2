@@ -47,6 +47,7 @@ bil$sex = recode(bil$sex, "1" = "M", "2" = "F")
 bil$shunt = recode(bil$shunt, "1" = "Yes", "2" = "No")
 bil$pink_or_blue = recode(bil$pink_or_blue, "1" = "Pink", "2" = "Blue")
 bil$sat_newborn = recode(bil$sat_newborn, "1" = "96-100", "2" = "91-95", "3" = "86-90", "4" = "81-85", "5" =  "76-80", "6" = "70-75", "7" = "< 70", "8" = "NA")
+bil$prolonged_pleura_effusion = recode(bil$prolonged_pleura_effusion, "1" = "Yes", "2" = "No")
 
 
 ##lrate_diff
@@ -81,7 +82,7 @@ tof$ID = recode(tof$ID,
                    "19" = "H", 
                    "24" = "I")
 
-glimpse(tof$shunt_in_months
+glimpse(tof$prolonged_pleura_effusion
         )
 ```
 
@@ -146,7 +147,7 @@ tofhx = tofhx %>%
 tofhxlatex = kbl(tofhx, "latex",
     booktabs = T, 
     digits = 1, 
-    caption = "Medical History",
+    caption = "Surgical History",
     linesep = "",
     escape = FALSE) %>%
   kable_classic_2 %>%
