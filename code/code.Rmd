@@ -1,4 +1,3 @@
----
 title: "Bil code"
 author: "Thomas Holm-Weber"
 date: "2023-03-28"
@@ -7,6 +6,7 @@ output: html_document
 
 #Packagesinstall
 ```{r, echo=FALSE}
+---
 install.packages("tidyverse", repos = "http://cran.us.r-project.org")
 install.packages("kableExtra")
 install.packages("knitr")
@@ -48,7 +48,7 @@ bil$shunt = recode(bil$shunt, "1" = "Yes", "2" = "No")
 bil$pink_or_blue = recode(bil$pink_or_blue, "1" = "Pink", "2" = "Blue")
 bil$sat_newborn = recode(bil$sat_newborn, "1" = "96-100", "2" = "91-95", "3" = "86-90", "4" = "81-85", "5" =  "76-80", "6" = "70-75", "7" = "< 70", "8" = "NA")
 bil$prolonged_pleura_effusion = recode(bil$prolonged_pleura_effusion, "1" = "Yes", "2" = "No")
-
+bil$td_tortousity = recode(bil$td_tortousity, "1" = "None", "2" = "Mild", "3" = "Moderate", "4" = "Severe")
 
 ##lrate_diff
 bil$lrate_diff = bil$lrate - bil$lrate_2
@@ -63,7 +63,7 @@ bil = bil %>% rename(
     PR = pr,
     IVC = mm_for_estimation_of_cvp,
     TAPSE = mm_lateral_tv_annulus_for,
-    "Years with PR" = years_with_pr,
+    "PR (years)" = years_with_pr,
     EF = ef
 )
 
@@ -82,8 +82,6 @@ tof$ID = recode(tof$ID,
                    "19" = "H", 
                    "24" = "I")
 
-glimpse(tof$prolonged_pleura_effusion
-        )
 ```
 
 
@@ -96,7 +94,7 @@ toft1 <- tof %>%
          age_at_doi,
          sex,
          bmi,
-         c(63:65)
+         c(61:63)
          ) %>% arrange(ID)
 
 toft1 = toft1 %>% 
@@ -131,7 +129,7 @@ tofhx = tof %>%
          shunt_in_months,
          age_at_repair_months,
          repair_type, 
-         `Years with PR`) %>% arrange(ID)
+         "PR (years)") %>% arrange(ID)
 
 tofhx = tofhx %>% 
   rename(
@@ -139,8 +137,7 @@ tofhx = tofhx %>%
     "SAT" = sat_newborn,
     "Shunt (Months)" = shunt_in_months,
     "Age (Months)" = age_at_repair_months,
-    "Type" = repair_type,
-    "PR (Years)" = `Years with PR`
+    "Type" = repair_type
   )
 
 
@@ -248,15 +245,28 @@ tofresults <- tof %>%
   select(
     ID,
     Type,
+    td_tortousity,
+    td_diameter,
     "Rate 1",
     "Rate 2",
+    velo_1,
+    velo_2,
     Pressure,
     PR,
     IVC,
     TAPSE,
     EF,
-    "Years with PR"
+    "PR (years)"
   ) %>% arrange(ID)
+
+tofresults = tofresults %>% 
+  rename(
+    "R1" = "Rate 1",
+    "R2" = "Rate 2",
+    "V1" = velo_1,
+    "V2" = velo_2,
+    "TD tortousity" = td_tortousity,
+    "TD Diameter (mm)" = td_diameter)
 
 tofresults
 
@@ -269,25 +279,12 @@ toflatex = kbl(tofresults, "latex",
     linesep = "",
     escape = FALSE) %>%
   kable_classic_2 %>%
-  add_header_above(c(" " = 1, "MRI" = 1, "NIRF" = 3, "Echo" = 4)) %>%
+  add_header_above(c(" " = 1, "MRI" = 3, "NIRF" = 5, "Echo" = 4)) %>%
   kable_styling(position = "center")
 
 
 cat(toflatex)
 ```
-
-#ToFresultstablelang
-```{r}
-tofresultslong <- tof %>% 
-  select(fp_nr, mritype_agreed, lrate,lrate_2,lpressure, c(34:57))
-
-tofresultslong
-
-write.csv(tofresultslong, "tofresultslong.csv")
-
-```
-
-
 
 
 #correlationstof
