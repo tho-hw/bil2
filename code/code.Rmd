@@ -48,7 +48,7 @@ bil$shunt = recode(bil$shunt, "1" = "Yes", "2" = "No")
 bil$pink_or_blue = recode(bil$pink_or_blue, "1" = "Pink", "2" = "Blue")
 bil$sat_newborn = recode(bil$sat_newborn, "1" = "96-100", "2" = "91-95", "3" = "86-90", "4" = "81-85", "5" =  "76-80", "6" = "70-75", "7" = "< 70", "8" = "NA")
 bil$prolonged_pleura_effusion = recode(bil$prolonged_pleura_effusion, "1" = "Yes", "2" = "No")
-bil$td_tortousity = recode(bil$td_tortousity, "1" = "None", "2" = "Mild", "3" = "Moderate", "4" = "Severe")
+bil$td_tortousity_asfac = recode(bil$td_tortousity, "1" = "None", "2" = "Mild", "3" = "Moderate", "4" = "Severe")
 
 ##lrate_diff
 bil$lrate_diff = bil$lrate - bil$lrate_2
@@ -245,7 +245,7 @@ tofresults <- tof %>%
   select(
     ID,
     Type,
-    td_tortousity,
+    bil$td_tortousity_asfac,
     td_diameter,
     "Rate 1",
     "Rate 2",
@@ -265,7 +265,7 @@ tofresults = tofresults %>%
     "R2" = "Rate 2",
     "V1" = velo_1,
     "V2" = velo_2,
-    "TD tortousity" = td_tortousity,
+    "TD tortousity" = td_tortousity_asfac,
     "TD Diameter (mm)" = td_diameter)
 
 tofresults
@@ -289,47 +289,71 @@ cat(toflatex)
 
 #correlationstof
 ```{r}
+## TD tortousity to MRI
+correlationtdtmri <- tof %>%
+  summarize(correlationtdtmri = cor(Type, td_tortousity, use = "complete.obs", method = "pearson"))
+
+print(correlationtdtmri)
+
+## TD diameter to MRI¨
+correlationtddmri <- tof %>%
+  summarize(correlationtddmri = cor(Type, td_diameter, use = "complete.obs", method = "pearson"))
+
+print(correlationtddmri)
+
 ## Lymph Rate to MRI
 correlationlr1mri <- tof %>%
-  summarize(correlationlr1mri = cor(mritype_agreed, lrate, use = "complete.obs", method = "pearson"))
+  summarize(correlationlr1mri = cor(Type, `Rate 1`, use = "complete.obs", method = "pearson"))
 
 print(correlationlr1mri)
 
 ## Lymph Rate 2 to MRI
 correlationlr2mri <- tof %>%
-  summarize(correlationlr1mri = cor(mritype_agreed, lrate_2, use = "complete.obs", method = "pearson"))
+  summarize(correlationlr1mri = cor(Type, `Rate 2`, use = "complete.obs", method = "pearson"))
 
 print(correlationlr2mri)
 
 ## Lymph Rate change to MRI
 correlationlrdiffmri <- tof %>%
-  summarize(correlationlr1mri = cor(mritype_agreed, lrate_diff, use = "complete.obs", method = "pearson"))
+  summarize(correlationlr1mri = cor(Type, lrate_diff, use = "complete.obs", method = "pearson"))
 
 print(correlationlrdiffmri)
 
+## Lymph velocity 1 to MRI
+correlationv1mri <- tof %>%
+  summarize(correlationv1mri = cor(Type, velo_1, use = "complete.obs", method = "pearson"))
+
+print(correlationv1mri)
+
+## Lymph velocity 2 to MRI
+correlationv2mri <- tof %>%
+  summarize(correlationv2mri = cor(Type, velo_2, use = "complete.obs", method = "pearson"))
+
+print(correlationv2mri)
+
 ## Lymph Pressure to MRI
 correlationlpmri <- tof %>%
-  summarize(correlationlr1mri = cor(mritype_agreed, lpressure, use = "complete.obs", method = "pearson"))
+  summarize(correlationlpmri = cor(Type, Pressure, use = "complete.obs", method = "pearson"))
 
 print(correlationlpmri)
 
 ## PR to MRI
 correlationprmri <- tof %>%
-  summarize(correlationlr1mri = cor(mritype_agreed, color_for_estimation_of_pr, use = "complete.obs", method = "pearson"))
+  summarize(correlationpr1mri = cor(Type, color_for_estimation_of_pr, use = "complete.obs", method = "pearson"))
 
 print(correlationprmri)
 
 ## Tapse to MRI
 correlationtapsemri <- tof %>%
-  summarize(correlationlr1mri = cor(mritype_agreed, mm_lateral_tv_annulus_for, use = "complete.obs", method = "pearson"))
+  summarize(correlationtapsemri = cor(Type, TAPSE, use = "complete.obs", method = "pearson"))
 
 print(correlationtapsemri)
 
 ## Years PR to MRI
-correlationtapsemri <- tof %>%
-  summarize(correlationlr1mri = cor(mritype_agreed, years_with_pr, use = "complete.obs"), method = "pearson")
+correlationyprmri <- tof %>%
+  summarize(correlationyprmri = cor(Type, `PR (years)`, use = "complete.obs"), method = "pearson")
 
-print(correlationtapsemri)
+print(correlationyprmri)
 
 
 
