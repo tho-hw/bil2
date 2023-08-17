@@ -279,10 +279,15 @@ agettest
 
 #TD
 meantdcon = mean(control$td_diameter, na.rm = T)
+sdtdcon = sd(control$td_diameter, na.rm = T)
 meantdtof = mean(tof$td_diameter, na.rm = T)
+sdtdtof = sd(tof$td_diameter, na.rm = T)
 
 meantdcon
 meantdtof
+sdtdcon
+sdtdtof
+
 
 TDttest = t.test(control$td_diameter,tof$td_diameter)
 
