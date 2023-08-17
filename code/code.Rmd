@@ -1,15 +1,18 @@
-title: "Bil code"
 author: "Thomas Holm-Weber"
 date: "2023-03-28"
 output: html_document
+title: "Bil code"
 ---
+---
+
 
 #Packagesinstall
 ```{r, echo=FALSE}
----
+
 install.packages("tidyverse", repos = "http://cran.us.r-project.org")
 install.packages("kableExtra")
 install.packages("knitr")
+install.packages("sjmisc")
 ```
 #PackagesLibrary
 ```{r, echo=FALSE}
@@ -18,6 +21,7 @@ library(ggplot2)
 library(dplyr)
 library(kableExtra)
 library(knitr)
+library(sjmisc)
 ```
 
 
@@ -37,18 +41,19 @@ bil = read_csv("bil.csv")
 
 #Subsets disease & rename variables
 ```{r, echo=FALSE}
-bil$disease = recode(bil$disease, "1" = "ba", "2" = "tof", "3" = "cc")
+bil$disease = recode(bil$disease, "1" = "ba", "2" = "tof", "3" = "cc", "4" = "control")
 bil$mm_for_estimation_of_cvp = recode(bil$mm_for_estimation_of_cvp, "1" = "Normal")
 bil$color_for_evaluation_of_ar = recode(bil$color_for_evaluation_of_ar, "1" = "No Aortic Regurgitation")
 bil$pr = recode(bil$color_for_estimation_of_pr, "1" = "None", "2" = "Mild", "3" = "Moderat ", "4" = "Severe")
 bil$mv_color_interrogation_for = recode(bil$mv_color_interrogation_for, "1" = "No Mitral Valve Regurgitation", "2" = "Mild Mitral Valve Regurgitation")
-bil$congenital_anatomy = recode(bil$congenital_anatomy, "1" = "ToF", "2" = "ToF w/ PA", "3" = "ToF w/ near PA", "4" = "ToF w/ PA and MAPCA supply")
+bil$congenital_anatomy = recode(bil$congenital_anatomy, "1" = "ToF", "2" = "ToF PA", "3" = "ToF near PA", "4" = "ToF PA w/ MAPCA")
 bil$sex = recode(bil$sex, "1" = "M", "2" = "F")
 bil$shunt = recode(bil$shunt, "1" = "Yes", "2" = "No")
 bil$pink_or_blue = recode(bil$pink_or_blue, "1" = "Pink", "2" = "Blue")
 bil$sat_newborn = recode(bil$sat_newborn, "1" = "96-100", "2" = "91-95", "3" = "86-90", "4" = "81-85", "5" =  "76-80", "6" = "70-75", "7" = "< 70", "8" = "NA")
 bil$prolonged_pleura_effusion = recode(bil$prolonged_pleura_effusion, "1" = "Yes", "2" = "No")
 bil$td_tortousity_asfac = recode(bil$td_tortousity, "1" = "None", "2" = "Mild", "3" = "Moderate", "4" = "Severe")
+bil$revalved = recode(bil$revalved, "1" = "Yes", "0" = "No")
 
 ##lrate_diff
 bil$lrate_diff = bil$lrate - bil$lrate_2
@@ -63,13 +68,13 @@ bil = bil %>% rename(
     PR = pr,
     IVC = mm_for_estimation_of_cvp,
     TAPSE = mm_lateral_tv_annulus_for,
-    "PR (years)" = years_with_pr,
     EF = ef
 )
 
 ba = bil %>% filter(disease=="ba")
 tof = bil %>% filter(disease=="tof")  %>% slice(-8)
 cc = bil %>% filter(disease=="cc")
+control = bil %>% filter(disease=="control") %>% slice(-4)
 
 tof$ID = recode(tof$ID,
                    "9" = "A", 
@@ -82,43 +87,67 @@ tof$ID = recode(tof$ID,
                    "19" = "H", 
                    "24" = "I")
 
+control$ID = recode(control$ID,
+                   "50" = "I", 
+                   "51" = "II", 
+                   "52" = "III", 
+                   "54" = "IV", 
+                   "55" = "V", 
+                   "56" = "VI", 
+                   "57" = "VII",
+                   "58" = "VIII", 
+                   "59" = "IX",
+                   "60" = "X")
+
 ```
 
 
-#ToF baseline data
+#ToF Table1
 ```{r}
 ##Table 1
 
 toft1 <- tof %>% 
   select(ID,
          age_at_doi,
-         sex,
+         height,
+         height_z_score,
+         weight,
+         weight_z_score,
          bmi,
+         bmi_z_score,
          c(61:63)
          ) %>% arrange(ID)
 
 toft1 = toft1 %>% 
   rename(
-    "Age (years)" = age_at_doi,
+    "Age" = age_at_doi,
     BMI = bmi,
-    Sex = sex,
     "Heart Rate" = puls,
     "Systolic" = bt_sys,
-    "Diastolic" = bt_dia)
+    "Diastolic" = bt_dia,
+    "Z-score 1" = height_z_score,
+    "Z-score 2" = weight_z_score,
+    "Z-score 3" = bmi_z_score,
+    Height = height,
+    Weight = weight)
 
 
 tof1latex = kbl(toft1, "latex",
     booktabs = T, 
     digits = 1, 
-    caption = "Baseline Demographic data",
+    caption = "Demographic data - ToF Patients",
     linesep = "",
     escape = FALSE) %>%
   kable_classic_2 %>%
   kable_styling(position = "center") %>%
-  add_header_above(c(" " = 4, "Blood pressure" = 2))
+  add_header_above(c(" " = 8, "Blood pressure" = 2))
+
 
 cat(tof1latex)
+```
 
+#Surgical history
+```{r}
 ##Surgical hx
 
 
@@ -128,16 +157,20 @@ tofhx = tof %>%
          sat_newborn,
          shunt_in_months,
          age_at_repair_months,
-         repair_type, 
-         "PR (years)") %>% arrange(ID)
+         repair_type,
+         revalved,
+         years_with_pr
+         ) %>% arrange(ID)
 
 tofhx = tofhx %>% 
   rename(
-    Anatomy = congenital_anatomy,
+    "Anatomy" = congenital_anatomy,
     "SAT" = sat_newborn,
-    "Shunt (Months)" = shunt_in_months,
-    "Age (Months)" = age_at_repair_months,
-    "Type" = repair_type
+    "Shuntet (months)" = shunt_in_months,
+    "Age (months)" = age_at_repair_months,
+    "Type" = repair_type,
+    "Revalved" = revalved,
+    "PR (years)" = years_with_pr
   )
 
 
@@ -148,13 +181,184 @@ tofhxlatex = kbl(tofhx, "latex",
     linesep = "",
     escape = FALSE) %>%
   kable_classic_2 %>%
-  add_header_above(c(" " = 1, "Neonatal" = 3, "Repair" = 2)) %>%
-  kable_styling(position = "center")
+  add_header_above(c(" " = 1, "Neonatal" = 3, "Repair" = 2))
 
 cat(tofhxlatex)
 
 ```
-#MRI3
+
+
+#Bloodtests
+```{r}
+tofbt = tof %>% 
+  select(86:89,
+         91:104)
+
+tofbt= tofbt %>% 
+  rename(
+    "Hemoglobin" = 1,
+    "Leucocytes" = 2,
+    "Lymphocytes" = 3,
+    "Platelets" = 4,
+    "Potassium" = 5,
+    "Sodium" = 6,
+    "Creatinin" = 7,
+    "Albumin" = 8,
+    "INR" = 9, 
+    "ALAT" = 10,
+    "Bilirubin" = 11,
+    "Cholesterol" = 12,
+    "HDL" = 13,
+    "LDL" = 14,
+    "Glucose" = 15,
+    "CRP" = 16,
+    "IgG" = 17,
+    "IgE" = 18) 
+
+#Transpose
+transtofbt = tofbt %>% rotate_df() 
+
+transtofbt = transtofbt %>% 
+              rename(
+                "A" = V1,
+                "B" = V2,
+                "C" = V3,
+                "D" = V4,
+                "E" = V5, 
+                "F" = V6,
+                "G" = V7,
+                "H" = V8,
+                "I" = V9)
+
+tofbtlat = kbl(transtofbt, "latex",
+    booktabs = T, 
+    digits = 1, 
+    caption = "Blood tests results ToF",
+    linesep = "",
+    escape = FALSE) %>%
+  kable_classic_2 
+
+cat(tofbtlat)
+```
+
+#Baseline Echo table
+```{r}
+
+tofecho = tof %>% 
+  select(ID,
+         PR,
+    IVC,
+    TAPSE,
+    EF) %>% arrange(ID)
+
+tofecho = kbl(tofecho, "latex",
+    booktabs = T, 
+    digits = 1, 
+    caption = "ToF Echocardiography",
+    linesep = "",
+    escape = FALSE) %>%
+  kable_classic_2 
+
+cat(tofecho)
+```
+
+
+# Control vs ToF group
+```{r}
+#age
+meanagecontrol = mean(control$age_at_doi)
+sdagecontrol = sd(control$age_at_doi)
+
+
+meanagetof = mean(tof$age_at_doi)
+sdagetof = sd(tof$age_at_doi)
+
+agettest = t.test(control$age_at_doi, tof$age_at_doi)
+
+agettest
+
+#TD
+meantdcon = mean(control$td_diameter, na.rm = T)
+meantdtof = mean(tof$td_diameter, na.rm = T)
+
+meantdcon
+meantdtof
+
+TDttest = t.test(control$td_diameter,tof$td_diameter)
+
+TDttest
+
+#Lymphscore
+lscorettest = t.test(control$mritype_t, tof$Type)
+
+lscorettest
+```
+
+#Fibroscan table
+```{r}
+fibro <- tof %>% 
+  select(ID,
+         c(108:110)) %>% arrange(ID)
+
+fibro = fibro %>% 
+  rename(
+    "FibroScan (kPa)" = fibroscan,
+    "CAP score" = cap,
+    "Interquartil range" = iqr
+  )
+
+fibrolat = kbl(fibro, "latex",
+    booktabs = T, 
+    digits = 1, 
+    caption = "Fibroscan results - ToF patients",
+    linesep = "",
+    escape = FALSE) %>%
+  kable_classic_2
+
+cat(fibrolat)
+```
+
+
+#ToFresultstableshort
+```{r}
+tofresults <- tof %>% 
+  select(
+    ID,
+    Type,
+    td_tortousity_asfac,
+    td_diameter,
+    "Rate 1",
+    "Rate 2",
+    velo_1,
+    velo_2,
+    Pressure) %>% arrange(ID)
+
+tofresults = tofresults %>% 
+  rename(
+    "R1" = "Rate 1",
+    "R2" = "Rate 2",
+    "P1" = Pressure,
+    "V1" = velo_1,
+    "V2" = velo_2,
+    "Tortousity" = td_tortousity_asfac,
+    "ø" = td_diameter)
+
+
+toflatex = kbl(tofresults, "latex",
+    booktabs = T, 
+    digits = 1, 
+    caption = "Lymphatic parameter results - ToF Patients",
+    linesep = "",
+    escape = FALSE) %>%
+  kable_classic_2 %>%
+  add_header_above(c(" " = 2, "Thoracuc duct" = 2, "Rate (/min)" = 2, "Velocity (cm/s)" = 2, "Pressure (mmHg)" = 1, " " = 5)) %>%
+  add_header_above(c(" " = 1, "MRI" = 3, "NIRF" = 5)) 
+
+
+cat(toflatex)
+```
+
+#MRI3 characteristics
 ```{r}
 mr3 = tof %>% filter(Type=="3")
 
@@ -166,17 +370,21 @@ mr3t = mr3 %>%
          age_at_repair_months,
          repair_type,
          prolonged_pleura_effusion,
-         `Years with PR`) %>% arrange(ID)
+         years_with_pr,
+         td_tortousity_asfac,
+         td_diameter) %>% arrange(ID)
 
 mr3t = mr3t %>% 
   rename(
     "Anatomy" = congenital_anatomy,
+    "Tortousity" = td_tortousity_asfac,
     "SAT" = sat_newborn,
-    "Shunt (Months)" = shunt_in_months,
-    "Age (Months)" = age_at_repair_months,
+    "Shuntet*" = shunt_in_months,
+    "Age†" = age_at_repair_months,
     "Type" = repair_type,
-    "PE or RV failure PO" = prolonged_pleura_effusion,
-    "PR (Years)" = `Years with PR`
+    "PE or RV§" = prolonged_pleura_effusion,
+    "PR¶" = years_with_pr,
+    "ø‡" = td_diameter
   )
 
 
@@ -187,103 +395,10 @@ mr3t = kbl(mr3t, "latex",
     linesep = "",
     escape = FALSE) %>%
   kable_classic_2 %>%
-  add_header_above(c(" " = 1, "Neonatal" = 3, "Repair" = 3)) %>%
+  add_header_above(c(" " = 1, "Neonatal" = 3, "Repair" = 3, "Present" = 3)) %>%
   kable_styling(position = "center")
 
 cat(mr3t)
-```
-
-
-
-
-#NIRF ToF
-```{r}
-mean(tof$lrate, na.rm = T)
-sd(tof$lrate, na.rm = T)
-mean(tof$lrate_2, na.rm = T)
-sd(tof$lrate_2, na.rm = T)
-mean(tof$lpressure, na.rm = T)
-sd(tof$lpressure, na.rm = T)
-```
-
-
-#MR ToF
-```{r, echo=FALSE}
-mean(tof$mritype_agreed, na.rm = T)
-```
-
-
-#Boxplot LP
-```{r, echo=FALSE}
-ggplot(bil, aes(x = disease, y = lpressure)) +
-  geom_boxplot() +
-  labs(x = "disease", y = "lpressure") + theme_bw()
-
-```
-
-
-#Boxplot LR
-```{r, echo=FALSE}
-ggplot(bil, aes(x = disease, y = lrate)) +
-  geom_boxplot() +
-  labs(x = "disease", y = "lrate") + theme_bw()
-```
-
-
-#Boxplot LR2
-```{r, echo=FALSE}
-ggplot(bil, aes(x = disease, y = lrate_2)) +
-  geom_boxplot() +
-  labs(x = "disease", y = "lrate2") + theme_bw()
-
-```
-
-
-#ToFresultstableshort
-```{r}
-tofresults <- tof %>% 
-  select(
-    ID,
-    Type,
-    bil$td_tortousity_asfac,
-    td_diameter,
-    "Rate 1",
-    "Rate 2",
-    velo_1,
-    velo_2,
-    Pressure,
-    PR,
-    IVC,
-    TAPSE,
-    EF,
-    "PR (years)"
-  ) %>% arrange(ID)
-
-tofresults = tofresults %>% 
-  rename(
-    "R1" = "Rate 1",
-    "R2" = "Rate 2",
-    "V1" = velo_1,
-    "V2" = velo_2,
-    "TD tortousity" = td_tortousity_asfac,
-    "TD Diameter (mm)" = td_diameter)
-
-tofresults
-
-write.csv(tofresults, "tofresults.csv")
-
-toflatex = kbl(tofresults, "latex",
-    booktabs = T, 
-    digits = 1, 
-    caption = "Results",
-    linesep = "",
-    escape = FALSE) %>%
-  kable_classic_2 %>%
-  add_header_above(c(" " = 1, "MRI" = 3, "NIRF" = 5, "Echo" = 4)) %>%
-  kable_styling(position = "center")
-
-
-cat(toflatex)
 ```
 
 
@@ -355,6 +470,6 @@ correlationyprmri <- tof %>%
 
 print(correlationyprmri)
 
-
-
 ```
+
+
