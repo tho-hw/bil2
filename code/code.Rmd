@@ -144,6 +144,9 @@ tof1latex = kbl(toft1, "latex",
 
 
 cat(tof1latex)
+
+mean(tof$bmi_z_score)
+sd(tof$bmi_z_score)
 ```
 
 #Surgical history
@@ -287,7 +290,6 @@ meantdcon
 meantdtof
 sdtdcon
 sdtdtof
-
 
 TDttest = t.test(control$td_diameter,tof$td_diameter)
 
