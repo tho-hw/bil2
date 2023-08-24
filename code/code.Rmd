@@ -145,8 +145,8 @@ tof1latex = kbl(toft1, "latex",
 
 cat(tof1latex)
 
-mean(tof$bmi_z_score)
-sd(tof$bmi_z_score)
+
+
 ```
 
 #Surgical history
@@ -191,7 +191,7 @@ cat(tofhxlatex)
 ```
 
 
-#Bloodtests
+#BloodtestsToF
 ```{r}
 tofbt = tof %>% 
   select(86:89,
@@ -242,6 +242,60 @@ tofbtlat = kbl(transtofbt, "latex",
   kable_classic_2 
 
 cat(tofbtlat)
+```
+
+#BloodtestsControls
+```{r}
+conbt = control %>% 
+  select(88:91,
+         93:106)
+
+conbt= conbt %>% 
+  rename(
+    "Hemoglobin" = 1,
+    "Leucocytes" = 2,
+    "Lymphocytes" = 3,
+    "Platelets" = 4,
+    "Potassium" = 5,
+    "Sodium" = 6,
+    "Creatinin" = 7,
+    "Albumin" = 8,
+    "INR" = 9, 
+    "ALAT" = 10,
+    "Bilirubin" = 11,
+    "Cholesterol" = 12,
+    "HDL" = 13,
+    "LDL" = 14,
+    "Glucose" = 15,
+    "CRP" = 16,
+    "IgG" = 17,
+    "IgE" = 18) 
+
+#Transpose
+transconbt = conbt %>% rotate_df() 
+
+transconbt = transconbt %>% 
+              rename(
+                "I" = V1,
+                "II" = V2,
+                "III" = V3,
+                "IV" = V4,
+                "V" = V5, 
+                "VI" = V6,
+                "VII" = V7,
+                "VIII" = V8,
+                "IX" = V9,
+                "X" =V10)
+
+conbtlat = kbl(transconbt, "latex",
+    booktabs = T, 
+    digits = 1, 
+    caption = "Blood tests results Controls",
+    linesep = "",
+    escape = FALSE) %>%
+  kable_classic_2 
+
+cat(conbtlat)
 ```
 
 #Baseline Echo table
