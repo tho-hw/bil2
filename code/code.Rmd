@@ -166,7 +166,7 @@ tofhx = tofhx %>%
   rename(
     "Anatomy" = congenital_anatomy,
     "SAT" = sat_newborn,
-    "Shuntet (months)" = shunt_in_months,
+    "Shunted (months)" = shunt_in_months,
     "Age (months)" = age_at_repair_months,
     "Type" = repair_type,
     "Revalved" = revalved,
@@ -427,12 +427,12 @@ mr3t = mr3t %>%
     "Anatomy" = congenital_anatomy,
     "Tortousity" = td_tortousity_asfac,
     "SAT" = sat_newborn,
-    "Shuntet*" = shunt_in_months,
-    "Age†" = age_at_repair_months,
+    "Shunted" = shunt_in_months,
+    "Age" = age_at_repair_months,
     "Type" = repair_type,
-    "PE or RV§" = prolonged_pleura_effusion,
-    "PR¶" = years_with_pr,
-    "ø‡" = td_diameter
+    "Complications" = prolonged_pleura_effusion,
+    "PR" = years_with_pr,
+    "ø" = td_diameter
   )
 
 
