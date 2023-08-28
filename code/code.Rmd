@@ -55,6 +55,13 @@ bil$prolonged_pleura_effusion = recode(bil$prolonged_pleura_effusion, "1" = "Yes
 bil$td_tortousity_asfac = recode(bil$td_tortousity, "1" = "None", "2" = "Mild", "3" = "Moderate", "4" = "Severe")
 bil$revalved = recode(bil$revalved, "1" = "Yes", "0" = "No")
 
+bil$wz =  paste(bil$weight, "(", bil$weight_z_score, ")", sep ="")
+bil$hz =  paste(bil$height, "(", bil$height_z_score, ")", sep ="")
+bil$bmiz = paste(bil$bmi, "(", bil$bmi_z_score, ")", sep ="")
+
+glimpse(bil$wz)
+
+
 ##lrate_diff
 bil$lrate_diff = bil$lrate - bil$lrate_2
 
@@ -66,7 +73,7 @@ bil = bil %>% rename(
     "Rate 2" = lrate_2,
     Pressure = lpressure,
     PR = pr,
-    IVC = mm_for_estimation_of_cvp,
+    CVP = mm_for_estimation_of_cvp,
     TAPSE = mm_lateral_tv_annulus_for,
     EF = ef
 )
@@ -105,48 +112,38 @@ control$ID = recode(control$ID,
 #ToF Table1
 ```{r}
 ##Table 1
-
 toft1 <- tof %>% 
   select(ID,
          age_at_doi,
-         height,
-         height_z_score,
-         weight,
-         weight_z_score,
-         bmi,
-         bmi_z_score,
-         c(61:63)
-         ) %>% arrange(ID)
+         wz,
+         hz,
+         bmiz,
+         PR,
+         CVP,
+        TAPSE,
+    EF) %>% arrange(ID)
+
 
 toft1 = toft1 %>% 
   rename(
     "Age" = age_at_doi,
-    BMI = bmi,
-    "Heart Rate" = puls,
-    "Systolic" = bt_sys,
-    "Diastolic" = bt_dia,
-    "Z-score 1" = height_z_score,
-    "Z-score 2" = weight_z_score,
-    "Z-score 3" = bmi_z_score,
-    Height = height,
-    Weight = weight)
+    "BMI, kg/m2" = bmiz,
+    "Height, cm" = hz,
+    "Weight, kg" = wz)
 
 
 tof1latex = kbl(toft1, "latex",
     booktabs = T, 
     digits = 1, 
-    caption = "Demographic data - ToF Patients",
+    caption = "Baseline characteristics - ToF Patients",
     linesep = "",
     escape = FALSE) %>%
   kable_classic_2 %>%
   kable_styling(position = "center") %>%
-  add_header_above(c(" " = 8, "Blood pressure" = 2))
+  add_header_above(c(" " = 5, "Echocardiography" = 4))
 
 
 cat(tof1latex)
-
-
-
 ```
 
 #Surgical history
@@ -296,28 +293,18 @@ conbtlat = kbl(transconbt, "latex",
   kable_classic_2 
 
 cat(conbtlat)
+
+mean(control$bmi_z_score, na.rm = T)
+
+t.test(tof$bmi_z_score,control$bmi_z_score)
+sd(tof$bmi_z_score)
+sd(control$bmi_z_score, na.rm = T)
+
+t.test(tof$height_z_score,control$height_z_score)
+t.test(tof$weight_z_score,control$weight_z_score)
 ```
 
-#Baseline Echo table
-```{r}
 
-tofecho = tof %>% 
-  select(ID,
-         PR,
-    IVC,
-    TAPSE,
-    EF) %>% arrange(ID)
-
-tofecho = kbl(tofecho, "latex",
-    booktabs = T, 
-    digits = 1, 
-    caption = "ToF Echocardiography",
-    linesep = "",
-    escape = FALSE) %>%
-  kable_classic_2 
-
-cat(tofecho)
-```
 
 
 # Control vs ToF group
