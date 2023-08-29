@@ -340,6 +340,44 @@ TDttest
 lscorettest = t.test(control$mritype_t, tof$Type)
 
 lscorettest
+
+
+#Coefiecient of varians
+cvdiacons = (sd(control$td_diameter_s, na.rm = T))/(mean(control$td_diameter_s, na.rm = T))
+cvdiacont = (sd(control$td_diameter, na.rm = T))/(mean(control$td_diameter, na.rm = T))
+
+cvdiatofs = (sd(tof$td_diameter_s, na.rm = T))/(mean(tof$td_diameter_s, na.rm = T))
+cvdiatoft = (sd(tof$td_diameter, na.rm = T))/(mean(tof$td_diameter, na.rm = T))
+
+
+cvdiacons
+cvdiacont
+cvdiatofs
+cvdiatoft
+
+tof$diffdiatof = tof$td_diameter-tof$td_diameter_s
+control$diffdiacon = control$td_diameter-control$td_diameter_s
+
+
+tofdiadiff = tof %>%
+            select(ID, diffdiatof)  %>%
+            arrange(ID)
+    
+condiadiff = control %>%
+            select(ID, diffdiacon)  %>%
+            arrange(ID)
+
+glimpse(tof$td_tortousity_agreed)
+glimpse(control$td_tortousity_agreed)
+
+toftordiff = tof %>%
+            select(ID, td_tortousity_agreed)  %>%
+            arrange(ID)
+    
+condtoriff = control %>%
+            select(ID, td_tortousity_agreed)  %>%
+            arrange(ID)
+
 ```
 
 #Fibroscan table
