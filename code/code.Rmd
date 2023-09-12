@@ -120,7 +120,7 @@ toft1 <- tof %>%
          bmiz,
          PR,
          CVP,
-        TAPSE,
+        TAPSE2,
     EF) %>% arrange(ID)
 
 
@@ -129,7 +129,8 @@ toft1 = toft1 %>%
     "Age" = age_at_doi,
     "BMI, kg/m2" = bmiz,
     "Height, cm" = hz,
-    "Weight, kg" = wz)
+    "Weight, kg" = wz,
+    "TAPSE" = TAPSE2)
 
 
 tof1latex = kbl(toft1, "latex",
@@ -145,6 +146,95 @@ tof1latex = kbl(toft1, "latex",
 
 cat(tof1latex)
 ```
+
+#Table1 ToF + controls minus Echo
+```{r}
+meanse <- function(x, ...){
+  mean1 <-   signif(round(mean(x, na.rm=T),2), 2)   #calculate mean and round
+  se1 <- signif(round(sd(x, na.rm=T), 2),1) # std error - round adding zeros
+  out <- paste(mean1, "$\\pm$", se1)  # paste together mean plus/minus and standard error
+  if (str_detect(out,"NA")) {out="NA"}   # if missing do not add plusminus
+  return(out)
+}
+
+Age = c(meanse(control$age_at_doi), 
+        meanse(tof$age_at_doi), 
+        sprintf("%.3f",t.test(control$age_at_doi,tof$age_at_doi, na.rm= T)$p.value))
+
+Age
+
+Weight = c(meanse(control$weight_z_score),
+           meanse(tof$weight_z_score), 
+           sprintf("%.3f",t.test(control$weight_z_score,tof$weight_z_score, na.rm= T)$p.value))
+
+Weight
+  
+Height = c(meanse(control$height_z_score),
+           meanse(tof$height_z_score),
+          sprintf("%.3f",t.test(control$height_z_score,tof$height_z_score, na.rm= T)$p.value))
+
+Height  
+
+BMI = c(meanse(control$bmi_z_score),
+           meanse(tof$bmi_z_score),
+          sprintf("%.3f",t.test(control$bmi_z_score,tof$bmi_z_score, na.rm= T)$p.value))
+
+BMI
+  
+T1tibble = tibble(Age, Height, Weight, BMI) %>% rotate_df() 
+
+colnames(T1tibble) = c("Controls","Tetralogy of Fallot", "p-value")
+rownames(T1tibble) = c("Age, years", "Weight", "Height", "BMI")
+
+T1tibble
+
+
+
+T1latex = kbl(T1tibble, "latex",
+              booktabs = T, 
+              digits = 2,
+              align = c('r', 'r'),
+              caption = "Table 1",
+              linesep = "", 
+              escape = FALSE) %>%
+  kable_classic_2 
+
+cat(T1latex)
+```
+
+#Echo table
+```{r}
+tof$TAPSE2 = paste(tof$TAPSE, "(", tof$tapse_z_score, ")", sep = "")
+
+echot <- tof %>% 
+  select(ID,
+         CVP,
+         TAPSE2,
+         PR,
+         rv_fac,
+         rv_ls,
+         lv_gls_average,
+        EF) %>% arrange(ID) 
+
+echot = echot %>% rename(
+    "FAC" =rv_fac,
+    "LS" = rv_ls,
+    "GLS" = lv_gls_average,
+    "TAPSE" = TAPSE2)
+
+echolatex = kbl(echot, "latex",
+              booktabs = T, 
+              digits = 2,
+              align = c('r', 'r'),
+              caption = "Echocardiography",
+              linesep = "", 
+              escape = FALSE) %>% add_header_above(c(" " = 2, "Right Ventricle" = 4, "Left Ventricle" = 2)) %>%
+  kable_classic_2 
+
+cat(echolatex)
+```
+
+
 
 #Surgical history
 ```{r}
