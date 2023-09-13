@@ -149,6 +149,8 @@ cat(tof1latex)
 
 #Table1 ToF + controls minus Echo
 ```{r}
+
+#Means
 meanse <- function(x, ...){
   mean1 <-   signif(round(mean(x, na.rm=T),2), 2)   #calculate mean and round
   se1 <- signif(round(sd(x, na.rm=T), 2),1) # std error - round adding zeros
@@ -156,6 +158,60 @@ meanse <- function(x, ...){
   if (str_detect(out,"NA")) {out="NA"}   # if missing do not add plusminus
   return(out)
 }
+
+#Categorical values
+summarize_categorical_variable <- function(data, variable_name) {
+  summary <- data %>%
+    mutate({{variable_name}} := factor({{variable_name}})) %>%
+    group_by({{variable_name}}) %>%
+    summarize(
+      Count = n()
+    ) %>%
+    ungroup()
+
+  total_count <- sum(summary$Count)
+  percentages <- (summary$Count / total_count) * 100
+
+  summary_text <- paste(
+    summary$Count,
+    "(",
+    round(percentages, 0),
+    "x)/",
+    total_count - summary$Count,
+    "(",
+    round(100 - percentages, 0),
+    "x)",
+    sep = ""
+  )
+
+  return(summary_text)
+}
+
+csex = summarize_categorical_variable(control, sex)
+
+tsex = summarize_categorical_variable(tof, sex)
+
+#cstest
+
+## Create a data frame with your data
+data <- data.frame(
+  Group = c("Group1", "Group2"),
+  Male = c(4, 5),
+  Female = c(5, 5)
+)
+
+# Create a contingency table
+contingency_table <- matrix(c(data$Male, data$Female), ncol = 2)
+
+# Perform Fisher's Exact Test
+fisher_result <- fisher.test(contingency_table)
+
+sexcstest = (fisher_result)$p.value
+
+
+Sex = c(csex[1], tsex[1], sexcstest)
+
+Sex
 
 Age = c(meanse(control$age_at_doi), 
         meanse(tof$age_at_doi), 
@@ -181,10 +237,10 @@ BMI = c(meanse(control$bmi_z_score),
 
 BMI
   
-T1tibble = tibble(Age, Height, Weight, BMI) %>% rotate_df() 
+T1tibble = tibble(Sex, Age, Height, Weight, BMI) %>% rotate_df() 
 
-colnames(T1tibble) = c("Controls","Tetralogy of Fallot", "p-value")
-rownames(T1tibble) = c("Age, years", "Weight", "Height", "BMI")
+colnames(T1tibble) = c("Controls (n = 10)","Tetralogy of Fallot (n = 9)", "p-value")
+rownames(T1tibble) = c("Sex (male/female), n(xx)", "Age (years)", "Weight", "Height", "BMI")
 
 T1tibble
 
