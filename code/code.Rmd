@@ -742,3 +742,23 @@ print(correlationyprmri)
 ```
 
 
+Non-participants vs participants
+```{r}
+## Create a data frame with your data
+datafish <- data.frame(
+  Group = c("Group1", "Group2"),
+  Male = c(4, 11),
+  Female = c(5, 19)
+)
+
+# Create a contingency table
+contingency_tablefish <- matrix(c(datafish$Male, datafish$Female), ncol = 2)
+
+# Perform Fisher's Exact Test
+fisher_resultfish <- fisher.test(contingency_tablefish)
+
+sexcstestfish = (fisher_resultfish)$p.value
+
+sexcstestfish
+```
+
