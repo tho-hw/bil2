@@ -49,6 +49,7 @@ bil$mv_color_interrogation_for = recode(bil$mv_color_interrogation_for, "1" = "N
 bil$congenital_anatomy = recode(bil$congenital_anatomy, "1" = "ToF", "2" = "ToF PA", "3" = "ToF near PA", "4" = "ToF PA w/ MAPCA")
 bil$sex = recode(bil$sex, "1" = "M", "2" = "F")
 bil$shunt = recode(bil$shunt, "1" = "Yes", "2" = "No")
+bil$shunt_in_months = recode(bil$shunt_in_months, "0" = "-", "3" = "3", "18" = "18", "8" = "8")
 bil$pink_or_blue = recode(bil$pink_or_blue, "1" = "Pink", "2" = "Blue")
 bil$sat_newborn = recode(bil$sat_newborn, "1" = "96-100", "2" = "91-95", "3" = "86-90", "4" = "81-85", "5" =  "76-80", "6" = "70-75", "7" = "< 70", "8" = "NA")
 bil$prolonged_pleura_effusion = recode(bil$prolonged_pleura_effusion, "1" = "Yes", "2" = "No")
@@ -59,7 +60,7 @@ bil$wz =  paste(bil$weight, "(", bil$weight_z_score, ")", sep ="")
 bil$hz =  paste(bil$height, "(", bil$height_z_score, ")", sep ="")
 bil$bmiz = paste(bil$bmi, "(", bil$bmi_z_score, ")", sep ="")
 
-glimpse(bil$wz)
+glimpse(bil$shunt_in_months)
 
 
 ##lrate_diff
@@ -311,7 +312,7 @@ tofhx = tof %>%
 tofhx = tofhx %>% 
   rename(
     "Anatomy" = congenital_anatomy,
-    "SAT" = sat_newborn,
+    "SAT (%)" = sat_newborn,
     "Shunted (months)" = shunt_in_months,
     "Age (months)" = age_at_repair_months,
     "Type" = repair_type,
@@ -327,7 +328,7 @@ tofhxlatex = kbl(tofhx, "latex",
     linesep = "",
     escape = FALSE) %>%
   kable_classic_2 %>%
-  add_header_above(c(" " = 1, "Neonatal" = 3, "Repair" = 2))
+  add_header_above(c(" " = 1, "Pre repair" = 3, "Repair" = 2, "Post repair" = 2))
 
 cat(tofhxlatex)
 
@@ -628,10 +629,45 @@ mr3t = kbl(mr3t, "latex",
     linesep = "",
     escape = FALSE) %>%
   kable_classic_2 %>%
-  add_header_above(c(" " = 1, "Neonatal" = 3, "Repair" = 3, "Present" = 3)) %>%
+  add_header_above(c(" " = 1, "Pre repair" = 3, "Repair" = 2, "Post repair" = 4)) %>%
   kable_styling(position = "center")
 
 cat(mr3t)
+
+mr3t2 =  mr3 %>%
+  select(ID,
+         congenital_anatomy,
+         sat_newborn,
+         shunt_in_months,
+         age_at_repair_months,
+         repair_type,
+         years_with_pr,
+         td_tortousity_asfac,
+         td_diameter) %>% arrange(ID)
+
+mr3t2 = mr3t2 %>% 
+  rename(
+    "Anatomy" = congenital_anatomy,
+    "Tortousity" = td_tortousity_asfac,
+    "SAT (%)" = sat_newborn,
+    "Shunted (months)" = shunt_in_months,
+    "Age (months)" = age_at_repair_months,
+    "Type" = repair_type,
+    "PR (years)" = years_with_pr,
+    "ø (mm)" = td_diameter
+  )
+
+mr3t2 = kbl(mr3t2, "latex",
+    booktabs = T, 
+    digits = 1, 
+    caption = "MRI type 3 characteristics",
+    linesep = "",
+    escape = FALSE) %>%
+  kable_classic_2 %>%
+  add_header_above(c(" " = 1, "Pre repair" = 3, "Repair" = 2, "Post repair" = 3))  %>%
+  kable_styling(position = "center")
+
+cat(mr3t2)
 ```
 
 
