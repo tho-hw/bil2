@@ -296,8 +296,6 @@ cat(echolatex)
 #Surgical history
 ```{r}
 ##Surgical hx
-
-
 tofhx = tof %>% 
   select(ID,
          congenital_anatomy,
@@ -332,6 +330,46 @@ tofhxlatex = kbl(tofhx, "latex",
 
 cat(tofhxlatex)
 
+#incl mri
+tofhxmri = tof %>% 
+  select(ID,
+         congenital_anatomy,
+         sat_newborn,
+         shunt_in_months,
+         age_at_repair_months,
+         repair_type,
+         revalved,
+         years_with_pr,
+        Type,
+        td_tortousity_asfac,
+        td_diameter_agreed,
+               ) %>% arrange(ID)
+
+tofhxmri = tofhxmri %>% 
+  rename(
+    "Anatomy" = congenital_anatomy,
+    "SAT (%)" = sat_newborn,
+    "Shunted (months)" = shunt_in_months,
+    "Age (months)" = age_at_repair_months,
+    "Repair" = repair_type,
+    "Revalved" = revalved,
+    "PR (years)" = years_with_pr,
+     "Tortousity" = td_tortousity_asfac,
+    "ø" = td_diameter_agreed)
+
+
+tofhxmrilatex = kbl(tofhxmri, "latex",
+    booktabs = T, 
+    digits = 1, 
+    caption = "Surgical History",
+    linesep = "",
+    escape = FALSE) %>%
+  kable_classic_2 %>%
+  add_header_above(" " = 2, ""
+%>%
+  add_header_above(c(" " = 1, "Pre repair" = 3, "Repair" = 2, "Post repair" = 2, "MRI findings" = 3))
+
+cat(tofhxmrilatex)
 ```
 
 
@@ -590,6 +628,36 @@ toflatex = kbl(tofresults, "latex",
 
 
 cat(toflatex)
+
+tofnirf = tof %>% 
+  select(
+    ID,
+    "Rate 1",
+    velo_1,
+    Pressure,
+    "Rate 2",
+    velo_2) %>% arrange(ID)
+
+tofnirf = tofnirf %>% 
+  rename(
+    "Rate (/min)1" = "Rate 1",
+    "Rate (/min)2" = "Rate 2",
+    "Pressure (mmHg)" = Pressure,
+    "Velocity (cm/s)1" = velo_1,
+    "Velocity (cm/s)2" = velo_2)
+
+
+tofnirflatex = kbl(tofnirf, "latex",
+    booktabs = T, 
+    digits = 1, 
+    caption = "Lymphatic Near-infrared flourescence imaging results",
+    linesep = "",
+    escape = FALSE) %>%
+  kable_classic_2 %>%
+  add_header_above(c(" " = 1, "Sequence 1" = 2, "Sequence 2" = 1, "Sequence 3" = 2))
+
+
+cat(tofnirflatex)
 ```
 
 #MRI3 characteristics
@@ -742,8 +810,9 @@ print(correlationyprmri)
 ```
 
 
-Non-participants vs participants
+#Non-participants vs participants
 ```{r}
+##Sex
 ## Create a data frame with your data
 datafish <- data.frame(
   Group = c("Group1", "Group2"),
@@ -760,5 +829,83 @@ fisher_resultfish <- fisher.test(contingency_tablefish)
 sexcstestfish = (fisher_resultfish)$p.value
 
 sexcstestfish
+
+##Shunt
+## Create a data frame with your data
+datashunt <- data.frame(
+  Group = c("Group1", "Group2"),
+  Male = c(3, 5),
+  Female = c(6, 25)
+)
+
+# Create a contingency table
+contingency_tableshunt <- matrix(c(datashunt$Male, datashunt$Female), ncol = 2)
+
+# Perform Fisher's Exact Test
+fisher_resultshunt <- fisher.test(contingency_tableshunt)
+
+sexcstestshunt = (fisher_resultshunt)$p.value
+
+sexcstestshunt
+
+
+
+##TAP
+## Create a data frame with your data
+datatap <- data.frame(
+  Group = c("Group1", "Group2"),
+  Male = c(7, 16),
+  Female = c(2, 14)
+)
+
+# Create a contingency table
+contingency_tabletap <- matrix(c(datatap$Male, datatap$Female), ncol = 2)
+
+# Perform Fisher's Exact Test
+fisher_resulttap <- fisher.test(contingency_tabletap)
+
+sexcstesttap = (fisher_resulttap)$p.value
+
+sexcstesttap
+
+
+#Contegra graft
+## Create a data frame with your data
+dataconte <- data.frame(
+  Group = c("Group1", "Group2"),
+  Male = c(2, 5),
+  Female = c(7, 25)
+)
+
+# Create a contingency table
+contingency_tableconte <- matrix(c(dataconte$Male, dataconte$Female), ncol = 2)
+
+# Perform Fisher's Exact Test
+fisher_resultconte <- fisher.test(contingency_tableconte)
+
+sexcstestconte = (fisher_resultconte)$p.value
+
+sexcstestconte
+
+#valve
+## Create a data frame with your data
+datavalve <- data.frame(
+  Group = c("Group1", "Group2"),
+  Male = c(0, 5),
+  Female = c(9, 25)
+)
+
+# Create a contingency table
+contingency_tablevalve <- matrix(c(datavalve$Male, datavalve$Female), ncol = 2)
+
+# Perform Fisher's Exact Test
+fisher_resultvalve <- fisher.test(contingency_tablevalve)
+
+sexcstestvalve = (fisher_resultvalve)$p.value
+
+sexcstestvalve
+
 ```
+
+
 
