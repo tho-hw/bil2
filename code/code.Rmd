@@ -591,7 +591,7 @@ cat(fibrolat)
 ```
 
 
-#ToFresultstableshort
+#tofresultsMRI+NIRF
 ```{r}
 tofresults <- tof %>% 
   select(
@@ -629,6 +629,10 @@ toflatex = kbl(tofresults, "latex",
 
 cat(toflatex)
 
+```
+
+#tofresultsnirf
+```{r}
 tofnirf = tof %>% 
   select(
     ID,
@@ -659,6 +663,38 @@ tofnirflatex = kbl(tofnirf, "latex",
 
 cat(tofnirflatex)
 ```
+
+#tofresultsmri
+```{r}
+tofresultsmri <- tof %>% 
+  select(
+    ID,
+    Type,
+    td_tortousity_asfac,
+    td_diameter_agreed
+    ) %>% arrange(ID)
+
+tofresultsmri = tofresultsmri %>% 
+  rename(
+    "Tortousity" = td_tortousity_asfac,
+    "Diameter" = td_diameter_agreed)
+
+
+toflatexmri = kbl(tofresultsmri, "latex",
+    booktabs = T, 
+    digits = 1, 
+    caption = "Lymphatic MRI results",
+    linesep = "",
+    escape = FALSE) %>%
+  kable_classic_2 %>%
+  add_header_above(c(" " = 2, "Thoracuc duct" = 2)) 
+
+
+cat(toflatexmri)
+```
+
+
+
 
 #MRI3 characteristics
 ```{r}
