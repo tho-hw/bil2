@@ -662,6 +662,17 @@ tofnirflatex = kbl(tofnirf, "latex",
 
 
 cat(tofnirflatex)
+
+R1 = mean(tof$`Rate 1`, na.rm=T)
+R1
+V1 = mean(tof$velo_1, na.rm=T)
+V1
+LP = mean(tof$Pressure, na.rm=T)
+LP
+R2 = mean(tof$`Rate 2`, na.rm=T)
+R2
+V2 = mean(tof$velo_2, na.rm=T)
+V2
 ```
 
 #tofresultsmri
