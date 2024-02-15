@@ -298,6 +298,8 @@ cat(echolatex)
 ##Surgical hx
 tofhx = tof %>% 
   select(ID,
+         age_at_doi,
+         sex,
          congenital_anatomy,
          sat_newborn,
          shunt_in_months,
@@ -309,13 +311,15 @@ tofhx = tof %>%
 
 tofhx = tofhx %>% 
   rename(
+    "Sex" = sex,
+    "Age" = age_at_doi,
     "Anatomy" = congenital_anatomy,
     "SAT (%)" = sat_newborn,
-    "Shunted (months)" = shunt_in_months,
-    "Age (months)" = age_at_repair_months,
+    "Shunted" = shunt_in_months,
+    "Age" = age_at_repair_months,
     "Type" = repair_type,
     "Revalved" = revalved,
-    "PR (years)" = years_with_pr
+    "PR" = years_with_pr
   )
 
 
@@ -326,13 +330,15 @@ tofhxlatex = kbl(tofhx, "latex",
     linesep = "",
     escape = FALSE) %>%
   kable_classic_2 %>%
-  add_header_above(c(" " = 1, "Pre repair" = 3, "Repair" = 2, "Post repair" = 2))
+  add_header_above(c(" " = 3, "Pre repair" = 3, "Repair" = 2, "Post repair" = 2))
 
 cat(tofhxlatex)
 
 #incl mri
 tofhxmri = tof %>% 
   select(ID,
+         age_at_doi,
+         sex,
          congenital_anatomy,
          sat_newborn,
          shunt_in_months,
@@ -347,13 +353,15 @@ tofhxmri = tof %>%
 
 tofhxmri = tofhxmri %>% 
   rename(
+    "Age" = age_at_doi,
+    "Sex" = sex,
     "Anatomy" = congenital_anatomy,
     "SAT (%)" = sat_newborn,
-    "Shunted (months)" = shunt_in_months,
-    "Age (months)" = age_at_repair_months,
+    "Shunted" = shunt_in_months,
+    "Age " = age_at_repair_months,
     "Repair" = repair_type,
     "Revalved" = revalved,
-    "PR (years)" = years_with_pr,
+    "PR" = years_with_pr,
      "Tortousity" = td_tortousity_asfac,
     "ø" = td_diameter_agreed)
 
@@ -365,9 +373,7 @@ tofhxmrilatex = kbl(tofhxmri, "latex",
     linesep = "",
     escape = FALSE) %>%
   kable_classic_2 %>%
-  add_header_above(" " = 2, ""
-%>%
-  add_header_above(c(" " = 1, "Pre repair" = 3, "Repair" = 2, "Post repair" = 2, "MRI findings" = 3))
+  add_header_above(c(" " = 3, "Pre repair" = 3, "Repair" = 2, "Post repair" = 2, "MRI findings" = 3))
 
 cat(tofhxmrilatex)
 ```
@@ -429,8 +435,8 @@ cat(tofbtlat)
 #BloodtestsControls
 ```{r}
 conbt = control %>% 
-  select(88:91,
-         93:106)
+  select(86:89,
+         91:104)
 
 conbt= conbt %>% 
   rename(
