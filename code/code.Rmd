@@ -385,6 +385,7 @@ tofbt = tof %>%
   select(86:89,
          91:104)
 
+
 tofbt= tofbt %>% 
   rename(
     "Hemoglobin (mmol/L)" = 1,
@@ -412,14 +413,17 @@ transtofbt = tofbt %>% rotate_df()
 transtofbt = transtofbt %>% 
               rename(
                 "A" = V1,
-                "B" = V2,
-                "C" = V3,
-                "D" = V4,
-                "E" = V5, 
-                "F" = V6,
-                "G" = V7,
-                "H" = V8,
-                "I" = V9)
+                "C" = V2,
+                "D" = V3,
+                "E" = V4,
+                "F" = V5, 
+                "H" = V6,
+                "B" = V7,
+                "I" = V8,
+                "G" = V9)
+
+transtofbt = transtofbt %>% 
+              select(A,B,C,D,E,F,G,H,I)
 
 tofbtlat = kbl(transtofbt, "latex",
     booktabs = T, 
@@ -474,6 +478,8 @@ transconbt = transconbt %>%
                 "VIII" = V8,
                 "IX" = V9,
                 "X" =V10)
+
+
 
 conbtlat = kbl(transconbt, "latex",
     booktabs = T, 
